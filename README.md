@@ -5,8 +5,8 @@ This is an end-to-end Machine Learning project that demonstrates the skills requ
 ## Project Status: In Progress
 
 * [x] **Phase 0: Foundation** - Project setup, virtual environment, and Git repository.
-* [x] **Phase 1: Data Acquisition** - Connected to the X (Twitter) API v2 and fetched first tweet.
-* [ ] **Phase 2: ML Model** - Loading and testing the sentiment analysis model.
+* [x] **Phase 1: Data Acquisition** - Connected to the X (Twitter) API v2.
+* [x] **Phase 2: ML Model** - Integrated a pre-trained Hugging Face Transformer model (`roberta-base-sentiment`) for sentiment analysis.
 * [ ] **Phase 3: API Development** - Building API endpoints with FastAPI.
 * [ ] **Phase 4: Containerization** - Packaging the app with Docker.
 * [ ] **Phase 5: Deployment** - Deploying to a public cloud service.
@@ -17,8 +17,9 @@ This is an end-to-end Machine Learning project that demonstrates the skills requ
 
 * **Python 3.10+**
 * **Virtual Environment:** `venv`
+* **ML/NLP:** Hugging Face `transformers` (using `cardiffnlp/twitter-roberta-base-sentiment-latest`)
+* **ML Framework:** `torch` (PyTorch)
 * **API Framework:** FastAPI
-* **ML/NLP:** Hugging Face `transformers` (DistilBERT-base-uncased)
 * **Data Source:** `tweepy` for X (Twitter) API v2
 * **Credentials:** `python-dotenv` for secret management
 * **Containerization:** Docker
@@ -55,5 +56,7 @@ This is an end-to-end Machine Learning project that demonstrates the skills requ
     pip install -r requirements.txt
     ```
 
-5.  **Run the application:**
-    *(Instructions TBD)*
+5.  **Run the script:**
+    ```bash
+    python main.py
+    ```

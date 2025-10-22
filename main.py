@@ -1,28 +1,33 @@
 import os
 import tweepy
 from dotenv import load_dotenv
+from transformers import pipeline  # NEW: Import the 'pipeline' function
 
 # --- 1. Load Environment Variables ---
-# This command finds the .env file in your project and loads the
-# variables from it into the environment.
 load_dotenv()
-
-# We can now safely access the token just like it was a
-# system setting.
 bearer_token = os.environ.get("TWITTER_BEARER_TOKEN")
 
-# A quick check to make sure the token was loaded.
 if not bearer_token:
     raise RuntimeError("TWITTER_BEARER_TOKEN not found! Check your .env file.")
 
 print("Successfully loaded Bearer Token.")
 
-# --- 2. Authenticate with the Twitter API ---
-# This is where we create our "client". This object is what
-# we'll use to make all our requests. We pass the Bearer Token
-# to it so it can prove who we are.
-# 'wait_on_rate_limit=True' is a nice feature: if we make too
-# many requests, it will automatically pause and retry.
+# --- NEW: 2. Load the Sentiment Analysis Model ---
+# This is the "magic". We're loading a pre-trained model.
+# The 'pipeline' function from Hugging Face is the easiest way to do this.
+# It handles all the complex stuff (tokenization, model inference) for us.
+# The model 'cardiffnlp/twitter-roberta-base-sentiment-latest' is
+# specifically trained for sentiment on Twitter data.
+print("Loading sentiment analysis model... (This may take a moment on first run)")
+# We'll use 'text-classification' as the task
+sentiment_pipeline = pipeline(
+    task="sentiment-analysis", 
+    model="cardiffnlp/twitter-roberta-base-sentiment-latest"
+)
+print("Sentiment model loaded successfully.")
+
+
+# --- 3. Authenticate with the Twitter API ---
 try:
     client = tweepy.Client(bearer_token, wait_on_rate_limit=True)
     print("Successfully authenticated with Twitter API.")
@@ -30,30 +35,37 @@ except Exception as e:
     print(f"Error during authentication: {e}")
     exit()
 
-# --- 3. Make Your First API Call ---
-# Let's search for recent tweets.
-# This query will find tweets from the last 7 days that
-# contain the word "Python" and the word "developer"
-# and are in English.
-query = "Python developer -is:retweet lang:en"
+# --- 4. Make Your API Call ---
+# Let's search for a more interesting topic this time.
+query = "Tesla -is:retweet lang:en"
 
 try:
     print(f"Searching for tweets with query: '{query}'")
-    
-    # client.search_recent_tweets is the main function.
-    # We pass it our query and ask for a max of 10 results.
     response = client.search_recent_tweets(query=query, max_results=10)
-
-    # The 'response' object contains a 'data' field, which is
-    # a list of Tweet objects.
     tweets = response.data
 
     if tweets:
-        print(f"Success! Found {len(tweets)} tweets:")
+        print(f"Success! Found {len(tweets)} tweets. Analyzing sentiment...")
+        
         for tweet in tweets:
             print("---")
-            print(f"ID: {tweet.id}")
             print(f"Text: {tweet.text}")
+            
+            # --- NEW: 5. Analyze the Sentiment ---
+            # We pass the raw tweet text directly to the model.
+            try:
+                sentiment_result = sentiment_pipeline(tweet.text)
+                
+                # The model returns a list, so we get the first (and only) item.
+                # It looks like: [{'label': 'positive', 'score': 0.98}]
+                label = sentiment_result[0]['label']
+                score = sentiment_result[0]['score']
+                
+                print(f"Sentiment: {label} (Score: {score:.4f})")
+                
+            except Exception as e:
+                print(f"Error during sentiment analysis: {e}")
+
     else:
         print("No tweets found for your query.")
 
