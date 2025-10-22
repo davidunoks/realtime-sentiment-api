@@ -1,14 +1,11 @@
-# Realtime-sentiment-api
-End-to-end ML project to analyze real-time tweet sentiment using Transformers, FastAPI, and Docker
-
-# Real-Time Tweet Sentiment Analysis API
+# 🚀 Real-Time Tweet Sentiment Analysis API
 
 This is an end-to-end Machine Learning project that demonstrates the skills required for an ML Engineer role. The system fetches live tweets based on a search term, performs sentiment analysis using a Hugging Face Transformer model, and serves the results via a REST API built with FastAPI.
 
 ## Project Status: In Progress
 
 * [x] **Phase 0: Foundation** - Project setup, virtual environment, and Git repository.
-* [ ] **Phase 1: Data Acquisition** - Connecting to the X (Twitter) API.
+* [x] **Phase 1: Data Acquisition** - Connected to the X (Twitter) API v2 and fetched first tweet.
 * [ ] **Phase 2: ML Model** - Loading and testing the sentiment analysis model.
 * [ ] **Phase 3: API Development** - Building API endpoints with FastAPI.
 * [ ] **Phase 4: Containerization** - Packaging the app with Docker.
@@ -22,7 +19,8 @@ This is an end-to-end Machine Learning project that demonstrates the skills requ
 * **Virtual Environment:** `venv`
 * **API Framework:** FastAPI
 * **ML/NLP:** Hugging Face `transformers` (DistilBERT-base-uncased)
-* **Data Source:** X (Twitter) API v2
+* **Data Source:** `tweepy` for X (Twitter) API v2
+* **Credentials:** `python-dotenv` for secret management
 * **Containerization:** Docker
 * **Deployment:** (TBD, e.g., Google Cloud Run or AWS)
 
@@ -43,11 +41,19 @@ This is an end-to-end Machine Learning project that demonstrates the skills requ
     # .\venv\Scripts\activate    # On Windows
     ```
 
-3.  **Install dependencies:**
-    *(This file will be created in a future step)*
+3.  **Set up your environment variables:**
+    * This project requires an X (Twitter) API v2 **Bearer Token**.
+    * Create a file named `.env` in the root of the project.
+    * Add your key to this file. **This file is git-ignored and will not be uploaded.**
+    ```
+    TWITTER_BEARER_TOKEN="YOUR_SECRET_BEARER_TOKEN_GOES_HERE"
+    ```
+
+4.  **Install dependencies:**
+    * With your virtual environment active, install all required libraries:
     ```bash
     pip install -r requirements.txt
     ```
 
-4.  **Set up environment variables:**
+5.  **Run the application:**
     *(Instructions TBD)*

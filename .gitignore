@@ -208,3 +208,6 @@ __marimo__/
 
 # Local virtual environment
 venv/
+
+# Environment variables
+.env
